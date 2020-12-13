@@ -1,0 +1,193 @@
+<html>
+  <head>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400;0,500;1,700&display=swap');
+      body { margin: 0; font-family: "Arimo", sans-serif; color: white; }
+      canvas { width: 100%; height: 100% }
+
+      div {
+        position: absolute;
+        z-index: 100;
+        display: block;
+      }
+
+      #spin-button {
+        background: #EFB90B;
+        color: white;
+        border-radius: 5px;
+        color: #000;
+        font-weight: bold;
+        font-style: italic;
+        font-size: 48px; 
+        top: 5%; 
+        left: 45%; 
+        width: 10%; 
+        cursor: pointer;
+        text-align: center;
+        min-width: 150px;
+        padding: 10px;
+        border: 5px solid #EFB90B;
+      }
+
+      #spin-button:hover {
+        border: 5px solid #fff;
+        color: #fff;
+      }
+
+      #spin-button:active {
+        background: #D1A20A;
+      }
+
+      .hide {
+        display: none;
+      }
+
+      #result-box {
+        position: absolute; 
+        left: 45%; 
+        top: 25%; 
+        width: 10%; 
+        z-index: 100; 
+        display: block; 
+        text-align: center; 
+        color: white; 
+        font-size: 86px; 
+        font-weight: bold;
+      }
+    </style>
+  </head>
+<body>
+  
+  <div id="spin-button" onclick="spin()">Spin!</div>
+
+  <div id="result-box" style=""></div>
+  <script src="https://threejs.org/build/three.js"></script>
+  <script>
+
+    function getRandomInt(max) {
+        return Math.floor(Math.random() * Math.floor(max));
+    }
+
+    function getSpinButton() {
+      return document.querySelector("#spin-button");
+    }
+
+    const DREIDEL_TYPES = [ "נ", "ג", "ה", "ש"];
+
+    let spinning = false; // controls spin animation
+
+    function spin() {
+      console.log("spinning!");
+      document.querySelector("#result-box").innerText = null;
+      getSpinButton().classList.add("hide");
+      reset_dreid();
+      var spin_time = getRandomInt(8)*795;
+      if (spin_time < 1000) spin_time += 1000;
+      setTimeout(() => {
+        var result = DREIDEL_TYPES[getRandomInt(3)];
+        document.querySelector("#result-box").innerText = result;
+        spinning = false;
+        getSpinButton().classList.remove("hide");
+      }, spin_time);
+    }
+
+    // setup that I can't quite explain
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
+    camera.position.z = 7;
+
+    var renderer = new THREE.WebGLRenderer();
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    document.body.appendChild( renderer.domElement );
+
+    // lighting that I can't quite explain 
+    const dirLight = new THREE.DirectionalLight( 0xffffff, 0.125 );
+    dirLight.position.set( 0, 0, 1 ).normalize();
+    scene.add( dirLight );
+
+    const pointLight = new THREE.PointLight( 0xffffff, 1.5 );
+    pointLight.position.set( 0, 20, 100 );
+    pointLight.color.setHSL( Math.random(), 1, 0.5 );
+    scene.add( pointLight );
+
+
+    // building shapes!
+    var material = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: false } );
+
+    var box_geometry = new THREE.BoxGeometry( 1, 1, 1 );
+    var cube = new THREE.Mesh( box_geometry, material );
+
+    var cone_geometry = new THREE.OctahedronGeometry( 0.5 );
+    var cone = new THREE.Mesh( cone_geometry, material );
+    cone.position.y -= .5;
+    cone.rotation.y += Math.PI / 4;
+
+    var cylinder_geometry = new THREE.CylinderGeometry( 0.2, 0.2, 1, 32 );
+    var cylinder = new THREE.Mesh( cylinder_geometry, material );
+    cylinder.position.y += 0.5;
+
+    scene.add( cube );
+    scene.add( cone );
+    scene.add(cylinder);
+
+    function reset_dreid() {
+      // bring everything back to initial state and turn on spinning
+      console.log("resetting");
+      cube.rotation.x = 0;
+      cube.rotation.y = 0;
+      cone.rotation.x = 0;
+      cone.rotation.y = Math.PI / 4;  
+      cylinder.rotation.x = 0;
+      cylinder.rotation.y = 0;
+
+      cone.position.x = 0;
+      cone.position.y = -.5;
+      cone.position.z = 0;
+      cylinder.position.z = 0;
+      spinning = true;
+    }
+
+    // animation
+    const dreid_speed_y = 0.06;
+    const dreid_speed_x = 0.03;
+
+    var wobble_invert = 1;
+    var wobble_i = 0;
+
+    var animate = function () {
+      animate_request_id = requestAnimationFrame( animate );
+
+      if (spinning == true) {
+        cube.rotation.y += dreid_speed_y;
+        cone.rotation.y += dreid_speed_y;
+        cylinder.rotation.y += dreid_speed_y;
+        
+        wobble_i = ++wobble_i % 30;
+        if (wobble_i == 0) wobble_invert *= -1;
+        var wobble = dreid_speed_x*wobble_invert * 0.5;
+        cube.rotation.x += wobble;
+        cylinder.rotation.x += wobble;
+        cone.rotation.x += wobble;
+
+      } else {
+        // base
+        cube.rotation.y = 0;
+        cube.rotation.x = 70;
+        // bottom
+        cone.rotation.y = Math.PI / 4;
+        cone.rotation.x = 100;
+        cone.position.z = 0.15;
+        // cone.position.y = 0.15;
+        // handle
+        cylinder.rotation.y = 0;
+        cylinder.rotation.x = 70;
+        cylinder.position.z = -1;
+      }
+
+      renderer.render( scene, camera );
+    };
+
+    animate();
+  </script>
+</body>
+</html>
