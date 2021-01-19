@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Alex Silverman</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&family=Permanent+Marker&display=swap'); 
+        body {
+            display: grid;
+            position: absolute;
+            grid-template-rows: 20% 20% 20% 20% 20%;
+            grid-template-columns: 20% 20% 20% 20% 20%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgb(216, 213, 213);
+            font-family: 'Fira Sans', 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        }
+
+        div.hello {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            grid-row-start: 3;
+            grid-column: 2 / 6;
+            background: white;
+            border-bottom-left-radius: 15px;
+            border-top-left-radius: 15px;
+            padding-left: 20px;
+        }
+        div.hello h1 {
+            font-weight: normal;
+            font-family: 'Permanent Marker', cursive;
+            margin-bottom: 5px;
+            margin-top: 0;
+            width: 400px;
+        }
+        div.hello div {
+            font-size: 18px;
+            font-family: 'Gloria Hallelujah';
+        }
+        section#social {
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+            grid-row: 4;
+            grid-column: 2 / span 3;
+            grid-column: 3;
+            margin: 100px 50px 0;
+            border-radius: 15px;
+            background: rgb(245, 242, 242);
+            font-weight:300;
+            color:rgb(97, 95, 95);
+        }
+        section#social i {
+            font-size: 18px;
+        }
+        section#social i:hover {
+            font-size: 24px;
+            color: #000;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="hello">
+        <h1>Alex Silverman is a...</h1>
+        <div>product manager, software engineer, musician, writer, and presentation enthusiast.</div>
+    </div>
+    <!-- <section id="social">
+        <i class="fab fa-twitter"></i>
+        <i class="fab fa-github"></i>
+        <i class="fab fa-linkedin"></i>
+    </section> -->
+</body>
+</html>
